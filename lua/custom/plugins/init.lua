@@ -3,23 +3,21 @@
 --
 -- See the kickstart.nvim README for more information
 
--- BUG: Insert 모드에서 ESC 키를 누르면 영어로 전환
---
--- vim.api.nvim_create_autocmd('InsertLeave', {
---   pattern = '*',
---   command = 'silent !fcitx-remote -c', -- 영어 입력 상태로 전환
--- })
---
--- -- Insert 모드로 들어가면 이전 입력 모드(한글)로 복원
--- vim.api.nvim_create_autocmd('InsertEnter', {
---   pattern = '*',
---   command = 'silent !fcitx-remote -o', -- 이전 입력 모드로 복원
--- })
---
--- -- Visual Mode에서는 항상 영어 입력 상태 유지
--- vim.api.nvim_create_autocmd('ModeChanged', {
---   pattern = 'n:v', -- Normal 모드에서 Visual 모드로 변경될 때
---   command = 'silent !fcitx-remote -c', -- 영어 입력 상태로 전환
--- })
+-- PERF: Insert 모드에서 ESC 키를 누르면 영어로 전환
+local function switch_to_korean()
+  -- 한국어 입력 모드로 전환
+  vim.fn.system '/mnt/d/app/im-select.exe 1042'
+end
+local function switch_between_languages()
+  -- 영어 입력 모드로 전환
+  vim.fn.system '/mnt/d/app/im-select.exe 1033'
+  -- 일정 시간 후 영어로 전환 (1ms 대기)
+  vim.defer_fn(switch_to_korean, 1)
+end
+-- InsertLeave 이벤트가 발생하면 영어로 전환 후 다시 한국어로 전환
+vim.api.nvim_create_autocmd('InsertLeave', {
+  pattern = '*',
+  callback = switch_between_languages,
+})
 
 return {}
