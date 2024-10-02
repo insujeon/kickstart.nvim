@@ -20,4 +20,21 @@ vim.api.nvim_create_autocmd('InsertLeave', {
   callback = switch_between_languages,
 })
 
+--TODO: Typora Loading with <F10>
+-- Function to save the file and open it with Typora
+-- Define the function to save the file and open it with Typora
+function open_with_typora()
+  -- Save the current file
+  vim.cmd ':w'
+
+  -- Get the full path of the current file
+  local file_path = vim.fn.expand '%:p'
+
+  -- Call Typora from Windows using the full WSL path to Typora
+  vim.fn.system('"/mnt/c/Program Files/Typora/Typora.exe" "' .. file_path .. '" &')
+end
+
+-- Map <F10> to call the 'open_with_typora' function
+vim.api.nvim_set_keymap('n', '<F10>', '<cmd>lua open_with_typora()<CR>', { noremap = true, silent = true })
+
 return {}

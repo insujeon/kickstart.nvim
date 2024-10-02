@@ -980,3 +980,5 @@ require('lazy').setup({
 -- if vim.fn.filereadable(vimrc_path) == 1 then
 --   vim.cmd('source ' .. vimrc_path)
 -- end
+--
+require 'custom.plugins.init'
